@@ -39,8 +39,7 @@ public class EjemploSesion4 extends Application {
         Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Configuration loaded, main application loading");
         Pair<MainController, Parent> mainControllerParentPair = ViewLoader.loadView("/main.fxml", resourceBundle);
         mainControllerParentPair.getKey().setPrimaryStage(primaryStage);
-        mainControllerParentPair.getKey().setConfiguration(configuration);
-        mainControllerParentPair.getKey().setPreferences(guiPreferences);
+        mainControllerParentPair.getKey().configure(configuration, resourceBundle, guiPreferences);
 
         Scene scene = new Scene(mainControllerParentPair.getValue());
         scene.getStylesheets().add("/main.css");

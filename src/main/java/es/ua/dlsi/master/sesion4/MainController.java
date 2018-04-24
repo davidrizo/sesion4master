@@ -44,6 +44,8 @@ public class MainController implements Initializable {
     private Model model;
     private GUIPreferences preferences;
     private static final String DIVIDER_POSITION_PREF = "dividerPosition";
+    private static final String LABEL_i18n = "txt.stringLoadedFromConfig";
+    private ResourceBundle resourceBundle;
 
 
     public Stage getPrimaryStage() {
@@ -59,28 +61,22 @@ public class MainController implements Initializable {
         mainBorderPane.setStyle("-fx-background-color: #FFFFEF;"); // en lugar de poner el estilo en el CSS lo ponemos aquí
     }
 
-    public void setConfiguration(Configuration configuration) {
+    private void loadData() {
+        // por simplicidad no hemos puesto aquí ningun binding
+        lvUsers.getItems().addAll(model.getUsers().getUsers());
+        Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Loaded {0} users" , lvUsers.getItems().size());
+
+    }
+
+    public void configure(Configuration configuration, ResourceBundle resourceBundle, GUIPreferences guiPreferences) {
+        this.resourceBundle = resourceBundle;
         this.configuration = configuration;
-        labelVersion.setText(configuration.getVersion() + " (cadena cargada de la configuración)");
+        String stringLoadedFromConfig = resourceBundle.getString(LABEL_i18n);
+        labelVersion.setText(configuration.getVersion() + stringLoadedFromConfig);
         labelIdioma.setText(configuration.getLanguage());
         Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Version {0} loaded from configuration file", configuration.getVersion());
 
-        loadData();
-    }
-
-    private void loadData() {
-        model = new Model();
-        // por simplicidad no hemos puesto aquí ningun binding
-        lvUsers.getItems().addAll(model.getUsers().getUsers());
-
-    }
-
-    public Configuration getConfiguration() {
-        return configuration;
-    }
-
-    public void setPreferences(GUIPreferences preferences) {
-        this.preferences = preferences;
+        this.preferences = guiPreferences;
 
         String dividerPosStr = this.preferences.getProperty(DIVIDER_POSITION_PREF);
         if (dividerPosStr != null) {
@@ -93,9 +89,8 @@ public class MainController implements Initializable {
                 preferences.storeProperty(DIVIDER_POSITION_PREF, newValue.toString());
             }
         });
-    }
 
-    public GUIPreferences getPreferences() {
-        return preferences;
+        model = configuration.getInjector().getInstance(Model.class);
+        loadData();
     }
 }

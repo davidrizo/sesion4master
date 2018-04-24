@@ -1,5 +1,11 @@
 package es.ua.dlsi.master.sesion4;
 
+import com.google.inject.AbstractModule;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+import es.ua.dlsi.master.sesion4.persistence.IUsersDAO;
+import es.ua.dlsi.master.sesion4.persistence.xstream.XStreamUsersDAO;
+
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -13,6 +19,7 @@ import java.util.logging.Logger;
  * @autor drizo
  */
 public class Configuration {
+    private final Injector injector;
     private String version="<conf.not.loaded>";
     private String language;
 
@@ -76,6 +83,18 @@ public class Configuration {
         } else {
             Logger.getLogger(Configuration.class.getName()).log(Level.INFO, "Using language Version {0}", language);
         }
+
+        // inject dependencies
+        injector = Guice.createInjector(new AbstractModule() {
+            @Override
+            protected void configure() {
+                bind(IUsersDAO.class).to(XStreamUsersDAO.class);
+            }
+        });
+    }
+
+    public Injector getInjector() {
+        return injector;
     }
 
     public String getVersion() {

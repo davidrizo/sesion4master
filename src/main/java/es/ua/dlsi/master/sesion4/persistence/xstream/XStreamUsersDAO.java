@@ -20,17 +20,20 @@ public class XStreamUsersDAO implements IUsersDAO {
     private final File file;
     private XStream xStream;
 
-    public XStreamUsersDAO(File file) {
-        this.file = file;
+    public XStreamUsersDAO() throws Sesion4Exception {
+        this(XStreamUsersDAO.class.getResource("/xmldata/users.xml").getFile());
+    }
+
+    public XStreamUsersDAO(String filename) throws Sesion4Exception {
+        this.file = new File(filename);
+        if (!file.exists()) {
+            throw new Sesion4Exception("Cannot load file " + this.file.getAbsolutePath());
+        }
+        Logger.getLogger(XStreamUsersDAO.class.getName()).log(Level.INFO, "Using filename {0}", filename);
         xStream = new XStream();
         xStream.alias("users", Users.class);
         xStream.alias("user", User.class);
     }
-
-    public XStreamUsersDAO(String filename) {
-        this(new File(filename));
-    }
-
 
     @Override
     public Users getUsers() {

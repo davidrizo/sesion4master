@@ -16,7 +16,7 @@ public class XStreamUsersDAOTest {
         users.addUser(new User("David Rizo"));
         users.addUser(new User("Santi Meliá"));
 
-        XStreamUsersDAO xStreamUsersDAO = new XStreamUsersDAO(new File("/tmp/a.xml")); //TODO TEMP
+        XStreamUsersDAO xStreamUsersDAO = new XStreamUsersDAO();
         xStreamUsersDAO.save(users);
 
         Users loadUsers = xStreamUsersDAO.getUsers();
