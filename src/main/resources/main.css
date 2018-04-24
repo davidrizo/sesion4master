@@ -1,0 +1,7 @@
+#titulo {
+    -fx-font-family: "Arial Black";
+    -fx-font-size: 24pt;
+    -fx-font-weight: bold;
+    -fx-color-label-visible: darkblue;
+}
+
